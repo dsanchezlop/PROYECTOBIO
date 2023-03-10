@@ -97,3 +97,18 @@ input[type="submit"]:hover {
         padding: 10px;
     }
 }
+
+
+
+
+
+ALTER TABLE users
+ADD CONSTRAINT userrole
+FOREIGN KEY (role)
+REFERENCES roles(role);
+
+
+#1064 - Algo está equivocado en su sintax cerca 'REFERENCES roles (role)' en la linea 4
+
+
+(Error: 150 "Foreign key constraint is incorrectly formed")
