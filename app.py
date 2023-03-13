@@ -13,9 +13,11 @@ db_config = {
     'database': 'proyecto-bio'
 }
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -32,20 +34,39 @@ def register():
             conn = mysql.connector.connect(**db_config)
             cursor = conn.cursor()
             try:
-                query = "INSERT INTO users (username, email, name, surname, passw, role) VALUES (%s, %s, %s, %s, %s, 2)"
-                cursor.execute(query, (username, email, name, surname, password))
-                conn.commit()
-                cursor.close()
-                conn.close()
-                session['username'] = username
-                return redirect('/login')
+                # query = "SELECT username FROM users WHERE username = %s"
+                # cursor.execute(query, (username,))
+                # result = cursor.fetchone()
+                # cursor.close()
+                # conn.close()
+                # if result is not None:
+                #     return render_template('register.html', error='Invalid username')
+                # else:
+                #     query2 = "SELECT email FROM users WHERE email = %s"
+                #     cursor.execute(query2, (email,))
+                #     conn.commit()
+                #     result2 = cursor.fetchone()
+                #     cursor.close()
+                #     conn.close()
+                #     if result2 is not None:
+                #         return render_template('register.html', error='Invalid email')
+                #     else:
+                        query3 = "INSERT INTO users (username, email, name, surname, passw, role) VALUES (%s, %s, %s, %s, %s, 2)"
+                        cursor.execute(
+                            query3, (username, email, name, surname, password))
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+                        session['username'] = username
+                        return redirect('/login')
             except mysql.connector.Error as error:
-                error_msg = str(error)
-                return render_template('register.html', error_msg=error_msg)
+                print(f"Error while executing SQL query: {error}")
+                return render_template('register.html', error='Error while executing SQL query')
         else:
             return render_template('register.html', error='Passwords do not match')
     else:
         return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -70,22 +91,25 @@ def login():
     else:
         return render_template('login.html')
 
+
 @app.route('/dashboard')
 def dashboard():
     if 'email' in session:
         return render_template('dashboard.html')
     else:
-        return redirect('/login')   
-    
+        return redirect('/login')
+
+
 @app.route('/redirect-to-login')
 def redirect_to_login():
     return redirect(url_for('login'))
-    
+
+
 @app.route('/redirect-to-register')
 def redirect_to_register():
     return redirect(url_for('register'))
 
 
 if __name__ == '__main__':
-    
+
     app.run(debug=True)
