@@ -13,8 +13,6 @@ db_config = {
     'database': 'proyecto-bio'
 }
 
-
-
 def registration():
     if request.method == 'POST':
         username = request.form['username']

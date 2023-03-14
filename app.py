@@ -60,6 +60,11 @@ def data_base():
 def maps():
     return render_template('maps.html')
 
+@app.route('/fauna_maps', methods=['GET', 'POST'])
+def fauna_maps():
+    return render_template('fauna_maps.html')
+
+
 @app.route('/dashboard')
 def dashboard():
     if 'username' in session:
