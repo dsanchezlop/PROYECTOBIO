@@ -6,7 +6,7 @@ import hashlib
 import re
 
 app = Flask(__name__)
-app.secret_key = 'key'
+app.secret_key = ''
 
 #Configuration parameter for access to the database
 db_config = {
@@ -48,14 +48,15 @@ def registration():
         confirm_password = bleach.clean(request.form['confirm-password'])
         if valid_name == True:
             if valid_surname == True:
-                # hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+                
                 if password == confirm_password:
+                    hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
                     conn = mysql.connector.connect(**db_config)
                     cursor = conn.cursor()
                     try:
                         query3 = "INSERT INTO users (username, email, name, surname, passw, role) VALUES (%s, %s, %s, %s, %s, 2)"
                         cursor.execute(
-                            query3, (username, email, name, surname, password))
+                            query3, (username, email, name, surname, hashed_password))
                         conn.commit()
                         cursor.close()
                         conn.close()
@@ -86,16 +87,18 @@ def log_in():
     if request.method == 'POST':
         username = bleach.clean(request.form['username'])
         password = bleach.clean(request.form['password'])
-        # hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        print(hashed_password)
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
         query = "SELECT username, passw, role FROM users WHERE username = %s"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
+        print(result)
         cursor.close()
         conn.close()
 
-        if result is not None and result[1] == password:
+        if result is not None and result[1] == hashed_password:
             session['username'] = username
             session['logged_in'] = True
             session['role'] = result[2]
