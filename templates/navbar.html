@@ -1,0 +1,14 @@
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="maps">Maps</a></li>
+        <li><a href="database">Database</a></li>
+        {% if not session.logged_in %}
+        <li><a href="login">Login</a></li>
+        <li><a href="register">Register</a></li>
+        {% else %}
+        <li><a href="profile">My Profile</a></li>
+        <li><a href="logout">Logout</a></li>
+        {% endif %}
+    </ul>
+</nav>

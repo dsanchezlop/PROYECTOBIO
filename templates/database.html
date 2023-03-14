@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+		    <h1>FertImpact</h1>
+            {% include 'navbar.html' %}
+        </header>
+        <h1>Database</h1>
+        <p>THIS IS THE DATABASE PAGE</p>
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
