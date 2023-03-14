@@ -61,7 +61,7 @@ def register():
                         return redirect('/login')
             except mysql.connector.Error as error:
                 print(f"Error while executing SQL query: {error}")
-                return render_template('register.html', error='Error while executing SQL query')
+                return render_template('register.html', error='Username or email not valid')
         else:
             return render_template('register.html', error='Passwords do not match')
     else:
