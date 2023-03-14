@@ -1,11 +1,14 @@
+#Imports
 from flask import Flask, render_template, request, redirect, session, url_for
-
 import mysql.connector
+import bleach
 import hashlib
+import re
 
 app = Flask(__name__)
 app.secret_key = 'key'
 
+#Configuration parameter for access to the database
 db_config = {
     'host': 'localhost',
     'user': 'adminProject',
@@ -13,42 +16,76 @@ db_config = {
     'database': 'proyecto-bio'
 }
 
+
+#Registration to the webpage:
+#   if the method is POST:
+#       if successful: 
+#           user is added to the database and redirected to the login
+#       else:
+#           renders the registration template with an error message
+#   else:
+#       return redirection to the register.html template 
 def registration():
     if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        name = request.form['name']
-        surname = request.form['surname']
-        password = request.form['password']
-        confirm_password = request.form['confirm-password']
+        valid_name = False
+        valid_surname = False
 
-        # hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-        if password == confirm_password:
-            conn = mysql.connector.connect(**db_config)
-            cursor = conn.cursor()
-            try:
-                query3 = "INSERT INTO users (username, email, name, surname, passw, role) VALUES (%s, %s, %s, %s, %s, 2)"
-                cursor.execute(
-                    query3, (username, email, name, surname, password))
-                conn.commit()
-                cursor.close()
-                conn.close()
-                session['username'] = username
-                return redirect('/login')
-            except mysql.connector.Error as error:
-                print(f"Error while executing SQL query: {error}")
-                return render_template('register.html', error='Username or email not valid')
+        username = bleach.clean(request.form['username'])
+        email = bleach.clean(request.form['email'])
+        name = bleach.clean(request.form['name'])
+        if re.match("^[A-Za-z ]*$", name):
+        # Name contains only letters and spaces
+            valid_name = True
         else:
-            return render_template('register.html', error='Passwords do not match')
+            valid_name = False
+        surname = bleach.clean(request.form['surname'])
+        if re.match("^[A-Za-z ]*$", surname):
+        # Surname contains only letters and spaces
+            valid_surname = True
+        else:
+            valid_surname = False
+        password = bleach.clean(request.form['password'])
+        confirm_password = bleach.clean(request.form['confirm-password'])
+        if valid_name == True:
+            if valid_surname == True:
+                # hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+                if password == confirm_password:
+                    conn = mysql.connector.connect(**db_config)
+                    cursor = conn.cursor()
+                    try:
+                        query3 = "INSERT INTO users (username, email, name, surname, passw, role) VALUES (%s, %s, %s, %s, %s, 2)"
+                        cursor.execute(
+                            query3, (username, email, name, surname, password))
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
+                        session['username'] = username
+                        return redirect('/login')
+                    except mysql.connector.Error as error:
+                        print(f"Error while executing SQL query: {error}")
+                        return render_template('register.html', error='Username or email not valid')
+                else:
+                    return render_template('register.html', error='Passwords do not match')
+            else:
+                return render_template('register.html', error='Surname is not valid')
+        else:
+            return render_template('register.html', error='Name is not valid')
     else:
         return render_template('register.html')
-    
 
+
+#Log in to the webpage:
+#   if the method is POST:
+#       if successful: 
+#           return user logged in and a session is created with the username, role and if it's logged 
+#       else:
+#           returns render the login template with an error message
+#   else:
+#       return render the login template
 def log_in():
-    print(request.method)
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = bleach.clean(request.form['username'])
+        password = bleach.clean(request.form['password'])
         # hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
@@ -71,8 +108,11 @@ def log_in():
         return render_template('login.html')
 
 
+#Log out of the webpage:
+#   Logs out of the webapge
 def log_out():
     session.pop('username', None)
+    session.pop('role', None)
     session['logged_in'] = False
     return redirect('/')
     
