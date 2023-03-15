@@ -33,13 +33,13 @@ def registration():
         username = bleach.clean(request.form['username'])
         email = bleach.clean(request.form['email'])
         name = bleach.clean(request.form['name'])
-        if re.match("^[A-Za-z ]*$", name):
+        if re.match("^[a-zA-ZÁáÉéÍíÓóÚúÜüñÑ]+(?:\s[a-zA-ZÁáÉéÍíÓóÚúÜüñÑ]+)*$", name):
         # Name contains only letters and spaces
             valid_name = True
         else:
             valid_name = False
         surname = bleach.clean(request.form['surname'])
-        if re.match("^[A-Za-z ]*$", surname):
+        if re.match("^[a-zA-ZÁáÉéÍíÓóÚúÜüñÑ]+(?:\s[a-zA-ZÁáÉéÍíÓóÚúÜüñÑ]+)*$", surname):
         # Surname contains only letters and spaces
             valid_surname = True
         else:
@@ -50,7 +50,7 @@ def registration():
             if valid_surname == True:
                 
                 if password == confirm_password:
-                    hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+                    hashed_password = hashlib.sha256(password.encode()).hexdigest()
                     conn = mysql.connector.connect(**db_config)
                     cursor = conn.cursor()
                     try:
@@ -60,7 +60,6 @@ def registration():
                         conn.commit()
                         cursor.close()
                         conn.close()
-                        session['username'] = username
                         return redirect('/login')
                     except mysql.connector.Error as error:
                         print(f"Error while executing SQL query: {error}")
@@ -87,7 +86,7 @@ def log_in():
     if request.method == 'POST':
         username = bleach.clean(request.form['username'])
         password = bleach.clean(request.form['password'])
-        hashed_password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
         print(hashed_password)
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
