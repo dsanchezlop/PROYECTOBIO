@@ -101,8 +101,6 @@ def log_in():
             session['username'] = username
             session['logged_in'] = True
             session['role'] = result[2]
-            print (result[2])
-            print (session['role'])
             return redirect('/')
         else:
             return render_template('login.html', error='Invalid username or password')
