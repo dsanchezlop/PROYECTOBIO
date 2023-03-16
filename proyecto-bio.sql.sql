@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-03-2023 a las 16:28:27
+-- Tiempo de generación: 16-03-2023 a las 17:46:38
 -- Versión del servidor: 10.4.25-MariaDB
 -- Versión de PHP: 8.1.10
 
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `users` (
   `id` int(11) NOT NULL COMMENT 'Id for the user',
   `username` varchar(50) NOT NULL COMMENT 'Name of the user',
-  `passw` varchar(50) NOT NULL COMMENT 'Password for the user',
+  `passw` varchar(150) NOT NULL COMMENT 'Password for the user',
   `name` varchar(50) NOT NULL COMMENT 'Name of the user',
   `surname` varchar(50) NOT NULL COMMENT 'Surname of the user',
   `email` varchar(50) NOT NULL COMMENT 'Email of the user',
@@ -42,10 +42,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `passw`, `name`, `surname`, `email`, `role`) VALUES
-(1, 'admin', 'admin', 'admin', 'admin', 'admin@admin.com', 1),
-(2, 'admin2', 'admin2', 'admin2', 'admin2', 'admin2@hotmail.com', 1),
-(3, 'lasmas', 'lasmas123', 'Pau', 'Lasmarias', 'lasmas@gmail.com', 2),
-(4, 'Sanguinor', '12345aA', 'Daniel', 'Sánchez', 'dani.sanchez.lopez0@gmail.com', 2);
+(9, 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'admin', 'admin', 'admin@admin.com', 1),
+(11, 'admin2', '1c142b2d01aa34e9a36bde480645a57fd69e14155dacfab5a3f9257b77fdc8d8', 'admintwo', 'admintwo', 'admin2@admin.com', 1),
+(12, 'admin3', '4fc2b5673a201ad9b1fc03dcb346e1baad44351daa0503d5534b4dfdcc4332e0', 'adminthree', 'adminthree', 'admin3@admin.com', 1),
+(13, 'lasmas', 'b9c5f4ae6b9c2b76ff8cdb08e5a51f79889ac90392a204b505ab53b4d240887f', 'lasmas', 'lasmas', 'lasmas@gmail.com', 2),
+(14, 'albert', '72d0166b5707d129dc321e56692fe454c034552ee9e2b38f5a7f1c1306a632ea', 'albert', 'albert', 'albert@gmail.com', 2),
+(15, 'sanguinor', 'e0fd411887af43dc788d8bd2288f089a794c0469cd7d000377bda35ebe05ba49', 'Daniel', 'Sánchez', 'dani.sanchez.lopez0@gmail.com', 2);
 
 --
 -- Índices para tablas volcadas
@@ -68,7 +70,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id for the user', AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id for the user', AUTO_INCREMENT=17;
 
 --
 -- Restricciones para tablas volcadas

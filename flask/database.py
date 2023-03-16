@@ -1,5 +1,5 @@
 #Imports
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import mysql.connector
 import bleach
 import hashlib
@@ -90,17 +90,18 @@ def log_in():
         print(hashed_password)
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        query = "SELECT username, passw, role FROM users WHERE username = %s"
+        query = "SELECT id ,username, passw, role FROM users WHERE username = %s"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
         print(result)
         cursor.close()
         conn.close()
 
-        if result is not None and result[1] == hashed_password:
+        if result is not None and result[2] == hashed_password:
+            session['user_id'] = result[0]
             session['username'] = username
             session['logged_in'] = True
-            session['role'] = result[2]
+            session['role'] = result[3]
             return redirect('/')
         else:
             return render_template('login.html', error='Invalid username or password')
@@ -115,6 +116,57 @@ def log_out():
     session.pop('role', None)
     session['logged_in'] = False
     return redirect('/')
+    
+
+
+def update_profile():
+    if request.method == 'POST':
+        # Retrieve form data
+        username = bleach.clean(request.form['username'])
+        name = bleach.clean(request.form['name'])
+        surname = bleach.clean(request.form['surname'])
+        email = bleach.clean(request.form['email'])
+        password = bleach.clean(request.form['password'])
+        confirmPassword = bleach.clean(request.form['confirmPassword'])
+        
+        # Validate form data
+        if not username:
+            flash('Name is required')
+            return redirect(url_for('profile'))
+        if not name:
+            flash('Name is required')
+            return redirect(url_for('profile'))
+        if not surname:
+            flash('Name is required')
+            return redirect(url_for('profile'))
+        if not email:
+            flash('Email is required')
+            return redirect(url_for('profile'))
+        if password == confirmPassword:
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        # Update user's profile information in the database
+            user_id = session['user_id']
+            conn = mysql.connector.connect(**db_config)
+            cursor = conn.cursor()
+            query = "UPDATE users SET username = %s ,name = %s, surname = %s, email = %s, passw = %s WHERE id = %s"
+            cursor.execute(query, (username, name, surname, email, hashed_password, user_id))
+            conn.commit()
+            cursor.close()
+            conn.close()  
+        # Redirect back to the profile page
+            flash('Profile updated')
+            return redirect(url_for('profile'))
+        else:
+            return render_template('profile.html', error='Passwords do not match')
+    else:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        query = "SELECT username, name, surname, email FROM users WHERE id = %s"
+        cursor.execute(query, (session['user_id'],))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return render_template('profile.html', user=user)
     
 
 @app.route('/dashboard')

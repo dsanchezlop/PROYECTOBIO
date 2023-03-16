@@ -16,6 +16,23 @@
         <p>YOU ARE NOT LOGGED IN</p>
         {% else %}
         <p>THIS IS THE PROFILE PAGE</p>
+        <form action="{{ url_for('profile') }}" method="POST">
+            <label for="username">Username:</label>required
+            <input type="text" name="username" value="{{ username }}"  value="{{ user[0] }}" required>
+            <label for="name">Name:</label>
+            <input type="text" name="name" value="{{ name }}" required value="{{ user[1] }}"  required>
+            <label for="name">Surname:</label>
+            <input type="text" name="surname" value="{{ surname }}" required value="{{ user[2] }}" required>
+            <label for="email">Email:</label>
+            <input type="email" name="email" value="{{ email }}" required value="{{ user[3] }}"  required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" value="{{ password }}" required>
+            <label for="password">Confirm password:</label>
+            <input type="password" name="confirmPassword" value="{{ confirmPassword }}" required>
+            <input type="submit" value="Update">
+        </form>
+
+
         {% endif %}
         {% if error %}
             <p>{{ error }}</p>

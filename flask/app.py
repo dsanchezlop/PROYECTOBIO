@@ -15,7 +15,6 @@ def before_request():
 @app.route('/')
 def home():
     before_request()
-    print(session['role'])
     return render_template('home.html')
 
 # If username not in session:
@@ -25,7 +24,7 @@ def home():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     before_request()
-    print(session['role'])
+
     if 'username' not in session: 
         result = database.registration()
         return result
@@ -39,7 +38,6 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     before_request()
-    print(session['role'])
     if 'username' not in session:
         result = database.log_in()
         return result
@@ -53,7 +51,6 @@ def login():
 @app.route('/logout', methods=['GET'])
 def logout():
     before_request()
-    print(session['role'])
     if 'username' in session:
         result = database.log_out()
         return result
@@ -67,11 +64,11 @@ def logout():
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     before_request()
-    print(session['role'])
     if 'username' not in session:
         return redirect('/')
     else:
-        return render_template('profile.html')
+       result = database.update_profile()
+       return result
 
 # Route for database
 @app.route('/database', methods=['GET', 'POST'])
