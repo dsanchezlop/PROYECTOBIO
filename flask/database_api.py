@@ -1,3 +1,4 @@
+import jwt
 import hashlib
 from flask import Flask, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
@@ -73,6 +74,7 @@ def update_user(user_id):
         return jsonify({'message': 'User not found'}), 404
     data = request.get_json()
     username = data.get('username')
+
     email = data.get('email')
     password = data.get('password')
     if username:
