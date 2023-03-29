@@ -1,7 +1,13 @@
-//1. Create a router and export it.
+import { createRouter, createWebHistory } from 'vue-router';
 import hello from "./components/HelloWorld.vue";
 import map from "./components/SVGMap.vue";
-import { createRouter, createWebHistory } from 'vue-router';
+import login from "./components/Login.vue";
+import map_faun from "./components/FaunaMaps.vue";
+import database from "./components/Database.vue";
+import register from "./components/Register.vue";
+import profile from "./components/Profile.vue";
+import logout from "./components/Logout.vue";
+
 
 //Routes
 const _routes = [
@@ -14,6 +20,36 @@ const _routes = [
     path:"/map",
     name:"map",
     component:map
+},
+{
+    path:"/login",
+    name:"login",
+    component:login
+},
+{
+    path:"/map_faun",
+    name:"map_faun",
+    component:map_faun
+},
+{
+    path:"/database",
+    name:"database",
+    component:database
+},
+{
+    path:"/register",
+    name:"register",
+    component:register
+},
+{
+    path:"/profile",
+    name:"profile",
+    component:profile
+},
+{
+    path:"/logout",
+    name:"logout",
+    component:logout
 }
 ];
 

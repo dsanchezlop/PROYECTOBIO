@@ -1,13 +1,20 @@
 <template>
-    <div style="position: absolute; top:1em;left:1em">
+    <h1>FertImpact</h1>
+    <div>
     <router-link to="/"> Home </router-link>
     <router-link to="/map"> Maps </router-link>
+    <router-link to="/map_faun"> Fauna maps </router-link>
+    <router-link to="/database"> Database </router-link>
+    <router-link to="/login"> Login </router-link>
+    <router-link to="/register"> Register </router-link>
+    <router-link to="/profile"> Profile </router-link>
+    <router-link to="/logout"> Logout </router-link>
   </div>
   <router-view/>
   
 </template>
 
-<script>
+<!-- <script>
 import SVGMap from '@/components/SVGMap.vue';
 
 export default {
@@ -18,10 +25,10 @@ export default {
   }
 };
 
-</script>
+</script> -->
 
 <style>
-.app {
+/* .app {
   height: 100vh;
-}
+} */
 </style>
