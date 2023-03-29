@@ -1,8 +1,9 @@
 <template>
-  <div class="app">
-    <h1>Interactive map</h1>
-    <SVGMap></SVGMap>
+    <div style="position: absolute; top:1em;left:1em">
+    <router-link to="/"> Home </router-link>
+    <router-link to="/map"> Maps </router-link>
   </div>
+  <router-view/>
   
 </template>
 
