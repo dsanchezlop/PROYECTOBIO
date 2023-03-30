@@ -15,10 +15,12 @@
          <h3 style="color: black"> {{ hoverValue }} </h3>
       </div>
    </div>
-   <div class="map-container">
+   <div class="map-container"
+    >
       <svg xmlns:mapsvg="http://mapsvg.com" version="1.1" id="svg2" ref="svgMap"
          mapsvg:geoViewBox="68.184010 37.084109 97.418146 6.753659" width="1009.6727" height="665.96301"
-         :style="{ transform: `scale(${zoomLevel})` }" @mouseover="changeHoverValue" @click="setSelectedPath">
+         :style="{ transform: `scale(${zoomLevel})` }" @mouseover="changeHoverValue" @click="setSelectedPath"
+        >
          <path
             d="m 479.68275,331.6274 -0.077,0.025 -0.258,0.155 -0.147,0.054 -0.134,0.027 -0.105,-0.011 -0.058,-0.091 0.006,-0.139 -0.024,-0.124 -0.02,-0.067 0.038,-0.181 0.086,-0.097 0.119,-0.08 0.188,0.029 0.398,0.116 0.083,0.109 10e-4,0.072 -0.073,0.119 z"
             title="Andorra" id="AD" />
@@ -777,6 +779,8 @@ import { ref } from 'vue';
 const hoverValue = ref("Mouse your mouse");
 const selectedStates = ref([]);
 const zoomLevel = ref(1);
+const dragInfo = ref(null);
+
 
 function clearSelection() {
    // Vaciar el array de países seleccionados
@@ -822,12 +826,55 @@ function changeHoverValue(hvalue) {
 }
 
 function zoomIn() {
-   zoomLevel.value += 0.1;
+   zoomLevel.value /= 0.90;
 }
 
 function zoomOut() {
-   zoomLevel.value -= 0.1;
+   if (zoomLevel.value <= 0.6) {
+
+   }
+   else {
+      zoomLevel.value *= 0.90;
+   }
 }
+
+function getMousePosition(evt) {
+   var CTM = svg.getScreenCTM();
+   return {
+      x: (evt.clientX - CTM.e) / CTM.a,
+      y: (evt.clientY - CTM.f) / CTM.d
+   };
+}
+
+// function startDrag(evt) {
+//   // store the initial mouse position and map position
+//   dragInfo.value = {
+//     x: evt.clientX,
+//     y: evt.clientY,
+//     mapX: parseFloat($refs.svgMap.style.left) || 0,
+//     mapY: parseFloat($refs.svgMap.style.top) || 0,
+//   };
+//   // set cursor to grabbing
+//   evt.target.style.cursor = 'grabbing';
+// }
+
+// function drag(evt) {
+//   if (dragInfo.value) {
+//     // calculate the offset between the current mouse position and the initial mouse position
+//     const dx = evt.clientX - dragInfo.value.x;
+//     const dy = evt.clientY - dragInfo.value.y;
+//     // set the new map position based on the offset
+//     $refs.svgMap.style.left = `${dragInfo.value.mapX + dx}px`;
+//     $refs.svgMap.style.top = `${dragInfo.value.mapY + dy}px`;
+//   }
+// }
+
+// function endDrag(evt) {
+//   dragInfo.value = null;
+//   evt.target.style.cursor = 'grab';
+// }
+
+
 
 </script>
 
@@ -899,4 +946,9 @@ path:hover {
    margin-right: auto;
    width: 2%;
    height: 2%;
-}</style>
+}
+
+.draggeable {
+   cursor: move;
+}
+</style>
