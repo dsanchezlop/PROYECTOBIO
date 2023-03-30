@@ -1,14 +1,19 @@
 <template>
     <h1>FertImpact</h1>
     <div>
-    <router-link to="/"> Home </router-link>
-    <router-link to="/map"> Maps </router-link>
-    <router-link to="/map_faun"> Fauna maps </router-link>
-    <router-link to="/database"> Database </router-link>
-    <router-link to="/login"> Login </router-link>
-    <router-link to="/register"> Register </router-link>
-    <router-link to="/profile"> Profile </router-link>
-    <router-link to="/logout"> Logout </router-link>
+      <nav>
+        <ul>
+        <li><router-link to="/"> Home </router-link></li>
+        <li><router-link to="/map"> Maps </router-link></li>
+        <li><router-link to="/map_faun"> Fauna maps </router-link></li>
+        <li><router-link to="/database"> Database </router-link></li>
+        <li><router-link to="/login"> Login </router-link></li>
+        <li><router-link to="/register"> Register </router-link></li>
+        <li><router-link to="/profile"> Profile </router-link></li>
+        <li><router-link to="/logout"> Logout </router-link></li>
+      </ul>
+      </nav>
+    
   </div>
   <router-view/>
   
@@ -28,7 +33,145 @@ export default {
 </script> -->
 
 <style>
-/* .app {
-  height: 100vh;
-} */
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Set global styles */
+  body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+  }
+  
+    /* Set global styles */
+    h1 {
+      text-align: center;
+    }
+
+  header {
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #333;
+    padding: 10px;
+  }
+  
+  nav ul li a:hover {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  section {
+    margin-bottom: 40px;
+  }
+  
+  section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  section p {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  footer p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2em;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0062cc;
+}
+
+.error-message {
+    color: red;
+    font-size: 1.1em;
+    margin-top: 10px;
+}
+
+
+
+/* Media queries */
+@media screen and (max-width: 600px) {
+    .container {
+        max-width: 100%;
+        padding: 10px;
+    }
+}
+  
+  /* Media queries */
+  @media screen and (max-width: 600px) {
+    nav ul {
+      flex-direction: column;
+    }
+  
+    nav ul li a {
+      padding: 5px;
+    }
+  }
+  
 </style>

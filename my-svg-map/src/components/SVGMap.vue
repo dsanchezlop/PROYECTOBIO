@@ -1,20 +1,21 @@
 <template>
-   <button @click="clearSelection"> Clear Selection </button>
-   <button @click="zoomIn">+</button>
-   <button @click="zoomOut">-</button>
+   <button class="button-zoom" @click="zoomIn">+</button>
+   <button class="button-zoom" @click="zoomOut">-</button>
+   <br>
+   <button class="button-container" @click="clearSelection"> Clear Selection </button>
 
    <div>
-      <h2> Selected States :</h2>
+      <h2> Selected Countries :</h2>
       <div style="display:inline">
          <h4 style="display:inline; margin:10px;" v-for="state in selectedStates" :key="state.id"> {{ state.id }} :
             {{ state.title }} </h4>
       </div>
       <div style="display:flex; text-align: center; align-items: center;">
-         <h2>Hover Value :</h2>
+         <h2>Hovered Country:</h2>
          <h3 style="color: black"> {{ hoverValue }} </h3>
       </div>
    </div>
-   <div>
+   <div class="map-container">
       <svg xmlns:mapsvg="http://mapsvg.com" version="1.1" id="svg2" ref="svgMap"
          mapsvg:geoViewBox="68.184010 37.084109 97.418146 6.753659" width="1009.6727" height="665.96301"
          :style="{ transform: `scale(${zoomLevel})` }" @mouseover="changeHoverValue" @click="setSelectedPath">
@@ -774,77 +775,59 @@
 import { ref } from 'vue';
 
 const hoverValue = ref("Mouse your mouse");
-const svg_map = ref(null);
 const selectedStates = ref([]);
 const zoomLevel = ref(1);
 
 function clearSelection() {
-   if (svg_map.value != null && svg_map.value.children != null) {
-      //For each element or path, remove the classes
-      let nodes = svg_map.value.childNodes;
-      for (let index = 0; index < nodes.length; index++) {
-         const element = nodes[index];
-         if (element.hasAttribute('class')) {
-            element.classList.remove("selectedPath");
-         }
-      }
-   }
+   // Vaciar el array de países seleccionados
+   selectedStates.value.splice(0);
 
-   //Clear selection directly as well
-   selectedStates.value = [];
+   // Deseleccionar todos los elementos del DOM que tengan la clase "selectedPath"
+   const selectedPaths = document.querySelectorAll(".selectedPath");
+   selectedPaths.forEach(element => {
+      element.classList.remove("selectedPath");
+   });
 }
 
+//Adds to the path array a
 function setSelectedPath(hvalue) {
    if (hvalue.target.attributes["title"]) {
-      let title = hvalue.target.attributes["title"].value;
       if (hvalue != null && hvalue.target != null) {
-         //Add class
-         hvalue.target.classList.add("selectedPath");
+         // Verificar si el valor ya está seleccionado
+         const title = hvalue.target.attributes["title"].value;
+         const id = hvalue.target.attributes["id"].value;
+         const isSelected = selectedStates.value.some(item => item.id === id);
 
-         //Get title and id
-         let title = hvalue.target.attributes["title"].value;
-         let id = hvalue.target.attributes["id"].value;
-
-         //Fetch unqiue set of values
-         let updated_array = [...selectedStates.value, { id, title }]; //Simple updated (may be duplicated)
-
-         let unique_ids = new Set(updated_array.map(p => p.id));
-
-         let unique_values = Array.from(unique_ids).map(id => {
-            return {
-               id: id,
-               title: updated_array.find(allval => allval.id == id).title
-            }
-         });
-
-         //Assign the values.
-         selectedStates.value = unique_values;
-         // let title = hvalue.target.attributes["title"];
-         // if (title != null){
-         //   hoverValue.value  = title.value;
-         //   console.log(hvalue.target.id, title.value);
-         // }
+         if (isSelected) {
+            // Si el valor ya está seleccionado, eliminarlo del array y eliminar la clase
+            selectedStates.value = selectedStates.value.filter(item => item.id !== id);
+            hvalue.target.classList.remove("selectedPath");
+         } else {
+            // Si el valor no está seleccionado, agregarlo al array y agregar la clase
+            selectedStates.value.push({ id, title });
+            hvalue.target.classList.add("selectedPath");
+         }
       }
    }
 }
 
-   function changeHoverValue(hvalue) {
-      if (hvalue != null && hvalue.target != null) {
-         let title = hvalue.target.attributes["title"];
-         if (title != null) {
-            hoverValue.value = title.value;
-            console.log(hvalue.target.id, title.value);
-         }
+
+function changeHoverValue(hvalue) {
+   if (hvalue != null && hvalue.target != null) {
+      let title = hvalue.target.attributes["title"];
+      if (title != null) {
+         hoverValue.value = title.value;
       }
    }
+}
 
-   function zoomIn() {
-      zoomLevel.value += 0.1;
-   }
+function zoomIn() {
+   zoomLevel.value += 0.1;
+}
 
-   function zoomOut() {
-      zoomLevel.value -= 0.1;
-   }
+function zoomOut() {
+   zoomLevel.value -= 0.1;
+}
 
 </script>
 
@@ -860,7 +843,6 @@ function setSelectedPath(hvalue) {
       fill: purple;
    }
 }
-
 
 path {
    fill: black;
@@ -878,7 +860,6 @@ path:hover {
    animation-fill-mode: forwards;
 }
 
-
 .logo {
    height: 6em;
    padding: 1.5em;
@@ -892,4 +873,30 @@ path:hover {
 .logo.vue:hover {
    filter: drop-shadow(0 0 2em #42b883aa);
 }
-</style>
+
+.map-container {
+   width: 100vw;
+   /* ancho al 100% de la ventana */
+   /* height: 100vh; altura al 100% de la ventana */
+   display: flex;
+   justify-content: center;
+   /* centro horizontal */
+   align-items: center;
+   /* centro vertical */
+}
+
+.button-container {
+   position: relative;
+   z-index: 1;
+   margin-right: auto;
+   width: fit-content;
+   height: fit-content;
+}
+
+.button-zoom {
+   position: relative;
+   z-index: 1;
+   margin-right: auto;
+   width: 2%;
+   height: 2%;
+}</style>
