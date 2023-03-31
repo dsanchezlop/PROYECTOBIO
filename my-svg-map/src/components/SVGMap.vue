@@ -17,6 +17,7 @@
    </div>
    <div class="map-container"
     >
+      <!-- intentar que los path sean devuelto por la API -->
       <svg xmlns:mapsvg="http://mapsvg.com" version="1.1" id="svg2" ref="svgMap"
          mapsvg:geoViewBox="68.184010 37.084109 97.418146 6.753659" width="1009.6727" height="665.96301"
          :style="{ transform: `scale(${zoomLevel})` }" @mouseover="changeHoverValue" @click="setSelectedPath"
