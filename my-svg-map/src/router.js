@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import hello from "./components/HelloWorld.vue";
 import map from "./components/SVGMap.vue";
 import login from "./components/Login.vue";
-import map_faun from "./components/FaunaMaps.vue";
+import map_flora from "./components/FloraMaps.vue";
 import database from "./components/Database.vue";
 import register from "./components/Register.vue";
 import profile from "./components/Profile.vue";
@@ -27,9 +27,9 @@ const _routes = [
     component:login
 },
 {
-    path:"/map_faun",
-    name:"map_faun",
-    component:map_faun
+    path:"/map_flora",
+    name:"map_flora",
+    component:map_flora
 },
 {
     path:"/database",

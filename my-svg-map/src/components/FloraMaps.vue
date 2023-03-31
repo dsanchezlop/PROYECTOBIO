@@ -1,13 +1,13 @@
 <template>
     <div class="hello">
       <br>
-      <h1>Fauna Maps</h1>
+      <h1>Flora Maps</h1>
     </div>
   </template>
   
   <script>
   export default {
-    name: 'FaunaMaps',
+    name: 'FloraMaps',
   }
   </script>
   
