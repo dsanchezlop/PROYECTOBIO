@@ -1,114 +1,91 @@
-#Imports
-from flask import Flask, render_template, request, redirect, session, url_for
-import database
+import jwt
+import hashlib
+from flask import Flask, request, jsonify, session
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = 'key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://<username>:<password>@<host>/<database>'
+db = SQLAlchemy(app)
 
-#Checks if there is a role assigned to the session
-@app.before_request
-def before_request():
-    if 'role' not in session:
-        session['role'] = 0
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    surname = db.Column(db.String(50),  nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.Integer, nullable=False)
 
-# Route for home
-@app.route('/')
-def home():
-    before_request()
-    return render_template('home.html')
+    def __init__(self, username, password, name, surname, email, role):
+        self.username = username
+        self.password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        self.name = name
+        self.surname = surname
+        self.email = email
+        self.role = role
 
-# If username not in session:
-#   do the database.registration
-# Else:
-#   redirects to home
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    before_request()
+    def __repr__(self):
+        return f'<User {self.username}>'
 
-    if 'username' not in session: 
-        result = database.registration()
-        return result
-    else:
-        return redirect('/')
-
-# If:username not in session:
-#   route for login
-# Else:
-#   redirects to home
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
-    before_request()
-    if 'username' not in session:
-        result = database.log_in()
-        return result
-    else:
-        return redirect('/')
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
 
-# If username in session:
-#   route to logout
-# Else: 
-#   redirects to home
-@app.route('/logout', methods=['GET'])
+    user = User.query.filter_by(username=username).first()
+
+    if user and user.password == hashlib.sha256(password.encode('utf-8')).hexdigest():
+        return jsonify({'success': True}), 200
+    else:
+        return jsonify({'success': False}), 401
+
+
+@app.route('/logout')
 def logout():
-    before_request()
-    if 'username' in session:
-        result = database.log_out()
-        return result
-    else:
-        return redirect('/')
+    session.pop('user_id', None)
+    return jsonify({'message': 'Logout successful'})
 
-# If username not in session:
-#   redirects to home
-# Else:
-#   route to profile
-@app.route('/profile', methods=['GET', 'POST'])
-def profile():
-    before_request()
-    if 'username' not in session:
-        return redirect('/')
-    else:
-       result = database.update_profile()
-       return result
 
-# Route for database
-@app.route('/database', methods=['GET', 'POST'])
-def data_base():
-    before_request()
-    print(session['role'])
-    return render_template('database.html')
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.json['username']
+    password = request.json['password']
+    name = request.json['name']
+    surname = request.json['surname']
+    email = request.json['email']
+    role = 'registered'
 
-# Route for maps
-@app.route('/maps', methods=['GET', 'POST'])
-def maps():
-    before_request()
-    print(session['role'])
-    return render_template('maps.html')
+    if not username or not email or not password or not name or not surname or not email:
+        return jsonify({'message': 'Missing parameters'}), 400
+    if User.query.filter_by(username=username).first() is not None:
+        return jsonify({'message': 'Username already taken'}), 409
+    if User.query.filter_by(email=email).first() is not None:
+        return jsonify({'message': 'Email already registered'}), 409
+    user = User(username, password, name, surname, email, password, role)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'message': 'Registration successful'}), 201
 
-# Route for fauna maps
-@app.route('/fauna_maps', methods=['GET', 'POST'])
-def fauna_maps():
-    before_request()
-    print(session['role'])
-    return render_template('fauna_maps.html')
+@app.route('/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+    data = request.get_json()
+    username = data.get('username')
 
-# If username in session route for dashboard
-# else redirects to login
-@app.route('/dashboard')
-def dashboard():
-    before_request()
-    print(session['role'])
-    if 'username' in session:
-        return render_template('dashboard.html')
-    else:
-        return redirect('/login')
+    email = data.get('email')
+    password = data.get('password')
+    if username:
+        user.username = username
+    if email:
+        user.email = email
+    if password:
+        user.set_password(password)
+    db.session.commit()
+    return jsonify({'message': 'User updated successfully'}), 200
 
-# If page not found route to home
-@app.errorhandler(404)
-def page_not_found(e):
-    before_request()
-    print(session['role'])
-    return redirect('/')
 
 if __name__ == '__main__':
-
     app.run(debug=True)

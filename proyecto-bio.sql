@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-03-2023 a las 17:46:38
+-- Tiempo de generación: 31-03-2023 a las 16:21:41
 -- Versión del servidor: 10.4.25-MariaDB
 -- Versión de PHP: 8.1.10
 
@@ -20,6 +20,25 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `proyecto-bio`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `roles`
+--
+
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL COMMENT 'Id for the role',
+  `role` varchar(20) NOT NULL COMMENT 'Name of the role'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id`, `role`) VALUES
+(1, 'admin'),
+(2, 'registered');
 
 -- --------------------------------------------------------
 
@@ -47,11 +66,18 @@ INSERT INTO `users` (`id`, `username`, `passw`, `name`, `surname`, `email`, `rol
 (12, 'admin3', '4fc2b5673a201ad9b1fc03dcb346e1baad44351daa0503d5534b4dfdcc4332e0', 'adminthree', 'adminthree', 'admin3@admin.com', 1),
 (13, 'lasmas', 'b9c5f4ae6b9c2b76ff8cdb08e5a51f79889ac90392a204b505ab53b4d240887f', 'lasmas', 'lasmas', 'lasmas@gmail.com', 2),
 (14, 'albert', '72d0166b5707d129dc321e56692fe454c034552ee9e2b38f5a7f1c1306a632ea', 'albert', 'albert', 'albert@gmail.com', 2),
-(15, 'sanguinor', 'e0fd411887af43dc788d8bd2288f089a794c0469cd7d000377bda35ebe05ba49', 'Daniel', 'Sánchez', 'dani.sanchez.lopez0@gmail.com', 2);
+(15, 'sanguinor', 'e0fd411887af43dc788d8bd2288f089a794c0469cd7d000377bda35ebe05ba49', 'Daniel', 'Sánchez', 'dani.sanchez.lopez0@gmail.com', 2),
+(17, 'prueba', '655e786674d9d3e77bc05ed1de37b4b6bc89f788829f9f3c679e7687b410c89b', 'prueba', 'prueba', 'prueba@prueba.com', 2);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `users`
@@ -67,10 +93,16 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id for the role', AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id for the user', AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id for the user', AUTO_INCREMENT=18;
 
 --
 -- Restricciones para tablas volcadas
