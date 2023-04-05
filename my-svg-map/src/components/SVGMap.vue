@@ -5,14 +5,20 @@
    <button class="button-container" @click="clearSelection"> Clear Selection </button>
 
    <div>
-      <h2> Selected Countries :</h2>
+      <h2>Selected Countries:</h2>
       <div style="display:inline">
-         <h4 style="display:inline; margin:10px;" v-for="state in selectedStates" :key="state.id"> {{ state.id }} :
-            {{ state.title }} </h4>
+         <!-- up to down -->
+         <h4 v-for="state in selectedStates" :key="state.id">
+            {{ state.id }}: {{ state.title }}
+         </h4>
+
+         <!-- right to left -->
+         <!-- <h4 style="display:inline; margin:10px;" v-for="state in selectedStates" :key="state.id"> {{ state.id }} :
+           {{ state.title }} </h4> -->
       </div>
       <div style="display:flex; text-align: center; align-items: center;">
          <h2>Hovered Country:</h2>
-         <h3 style="color: black"> {{ hoverValue }} </h3>
+         <h3 style="color: black" id="hover-value2">Move your mouse</h3>
       </div>
    </div>
    <div ref="chart">
@@ -20,77 +26,97 @@
    </div>
 </template>
 
+
 <script>
 import { ref } from 'vue';
 import * as d3 from "d3";
 
-const hoverValue = ref("Mouse your mouse");
-const selectedStates = ref([]);
-const zoomLevel = ref(1);
-const dragInfo = ref(null);
-
 export default {
-  mounted() {
-    const svg = d3.select(this.$refs.chart)
-      .append("svg")
-      .attr("width", "1009.6727")
-      .attr("height", "665.96301");
+   data() {
+      return {
+         selectedStates: ref([])
+      }
+   },
+   mounted() {
+      const svg = d3.select(this.$refs.chart)
+         .append("svg")
+         .attr("width", "1009.6727")
+         .attr("height", "665.96301");
 
-    // Aquí es donde se carga el archivo world.svg y se agrega al SVG
-    d3.xml(require("@/assets/world.svg"))
-      .then(data => {
-        const importedNode = document.importNode(data.documentElement, true);
-        svg.node().appendChild(importedNode);
+      // Aquí es donde se carga el archivo world.svg y se agrega al SVG
+      d3.xml(require("@/assets/world.svg"))
+         .then(data => {
+            const importedNode = document.importNode(data.documentElement, true);
+            svg.node().appendChild(importedNode);
 
-        // Obtener todos los elementos "path" del SVG
-        const paths = svg.selectAll('path');
+            // Obtener todos los elementos "path" del SVG
+            const paths = svg.selectAll('path');
 
-        // Asignar la función "changeColorOnClick" al evento "click" de cada elemento "path"
-        paths.on('click', changeColorOnClick);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  },
-};
+            // Asignar las funciones "changeColorOnClick", "changeColorOnHover" y "restoreColorOnHover" a los eventos correspondientes de cada elemento "path"
+            paths
+               .on('click', this.changeColorOnClick)
+               .on('mouseover', this.changeColorOnHover)
+               .on('mouseout', this.restoreColorOnHover);
+         })
+         .catch(error => {
+            console.error(error);
+         });
+   },
+   methods: {
+      // Función para cambiar el color de fondo de un elemento "path" a verde al hacer clic en él
+      changeColorOnClick(event) {
+         const path = event.target;
 
-// Función para cambiar el color de fondo de un elemento "path" a verde al hacer clic en él
-function changeColorOnClick(event) {
-  const path = event.target;
+         if (path.classList.contains('selectedPath')) {
+            // si ya está seleccionado, se quita el color
+            path.style.fill = 'black';
+            path.classList.remove('selectedPath');
+            // se elimina el país de la lista de países seleccionados
+            this.selectedStates = this.selectedStates.filter(state => state.id !== path.id);
+         } else {
+            // si no está seleccionado, se agrega el color
+            path.style.fill = 'green';
+            path.classList.add('selectedPath');
+            // se agrega el país a la lista de países seleccionados
+            this.selectedStates.push({ id: path.id, title: path.getAttribute('title') });
+            console.log(this.selectedStates);
+         }
+      },
 
-  if (path.classList.contains('selectedPath')) {
-    // si ya está seleccionado, se quita el color
-    path.style.fill = 'black';
-    path.classList.remove('selectedPath');
-    // se elimina el país de la lista de países seleccionados
-    selectedStates.value = selectedStates.value.filter(state => state.id !== path.id);
-  } else {
-    // si no está seleccionado, se agrega el color
-    path.style.fill = 'green';
-    path.classList.add('selectedPath');
-    // se agrega el país a la lista de países seleccionados
-    selectedStates.value.push({id: path.id, title: path.getAttribute('title')});
-  }
+      // Función para cambiar el color de fondo de un elemento "path" a púrpura al pasar el mouse por encima
+      changeColorOnHover(event) {
+         const path = event.target;
+         if (!path.classList.contains('selectedPath')) {
+            path.style.fill = 'purple';
+            document.getElementById("hover-value2").textContent = path.getAttribute('title');
+         }
+      },
+
+      // Función para restaurar el color de fondo de un elemento "path" al dejar de pasar el mouse por encima
+      restoreColorOnHover(event) {
+         const path = event.target;
+
+         if (!path.classList.contains('selectedPath')) {
+            path.style.fill = 'black';
+         }
+      },
+      // Funcion para vaciar la array y quitar el color de los paises seleccionados
+      clearSelection() {
+         // Vaciar el array de países seleccionados
+         this.selectedStates.splice(0);
+
+         // Deseleccionar todos los elementos del DOM que tengan la clase "selectedPath"
+         const selectedPaths = document.querySelectorAll(".selectedPath");
+         selectedPaths.forEach(element => {
+            element.classList.remove("selectedPath");
+         });
+      }
+   }
 }
 </script>
 
+
 <style scoped>
-@keyframes slowchange {
-   to {
-      fill: indianred;
-   }
-}
-
-@keyframes hoverChange {
-   to {
-      fill: purple;
-   }
-}
-
-path {
-   fill: black;
-}
-
 .selectedPath {
    animation-name: slowchange;
    animation-duration: 1.5s;
@@ -103,29 +129,11 @@ path:hover {
    animation-fill-mode: forwards;
 }
 
-.logo {
-   height: 6em;
-   padding: 1.5em;
-   will-change: filter;
-}
-
-.logo:hover {
-   filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-   filter: drop-shadow(0 0 2em #42b883aa);
-}
-
 .map-container {
    width: 100vw;
-   /* ancho al 100% de la ventana */
-   /* height: 100vh; altura al 100% de la ventana */
    display: flex;
    justify-content: center;
-   /* centro horizontal */
    align-items: center;
-   /* centro vertical */
 }
 
 .button-container {
@@ -147,8 +155,9 @@ path:hover {
 .draggeable {
    cursor: move;
 }
+
 .selected {
-  fill: green;
+   fill: green;
 }
 
 path {
