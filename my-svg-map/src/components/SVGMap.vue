@@ -109,6 +109,7 @@ export default {
          const selectedPaths = document.querySelectorAll(".selectedPath");
          selectedPaths.forEach(element => {
             element.classList.remove("selectedPath");
+            element.style.fill = "black";
          });
       }
    }
