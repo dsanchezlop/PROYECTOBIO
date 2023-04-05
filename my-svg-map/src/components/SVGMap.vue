@@ -22,7 +22,6 @@
       </div>
    </div>
    <div ref="chart">
-      <svg></svg>
    </div>
 </template>
 
@@ -40,8 +39,10 @@ export default {
    mounted() {
       const svg = d3.select(this.$refs.chart)
          .append("svg")
-         .attr("width", "1009.6727")
-         .attr("height", "665.96301");
+         .attr('width', '75%')
+         .attr('height', '100%')
+         .style("position", "absolute")
+         .style('left', '25%');
 
       // Aquí es donde se carga el archivo world.svg y se agrega al SVG
       d3.xml(require("@/assets/world.svg"))
