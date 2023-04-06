@@ -5,6 +5,10 @@
    <button class="button-container" @click="clearSelection"> Clear Selection </button>
 
    <div>
+      <div style="display:flex; text-align: center; align-items: center;">
+         <h2>Hovered Country:</h2>
+         <h3 style="color: black" id="hover-value2">Move your mouse</h3>
+      </div>
       <h2>Selected Countries:</h2>
       <div style="display:inline">
          <!-- up to down -->
@@ -15,10 +19,6 @@
          <!-- right to left -->
          <!-- <h4 style="display:inline; margin:10px;" v-for="state in selectedStates" :key="state.id"> {{ state.id }} :
            {{ state.title }} </h4> -->
-      </div>
-      <div style="display:flex; text-align: center; align-items: center;">
-         <h2>Hovered Country:</h2>
-         <h3 style="color: black" id="hover-value2">Move your mouse</h3>
       </div>
    </div>
    <div ref="chart">
@@ -33,7 +33,8 @@ import * as d3 from "d3";
 export default {
    data() {
       return {
-         selectedStates: ref([])
+         selectedStates: ref([]),
+         currentZoom: 1 // Definir la variable currentZoom
       }
    },
    mounted() {
@@ -41,8 +42,9 @@ export default {
          .append("svg")
          .attr('width', '75%')
          .attr('height', '100%')
-         .style("position", "absolute")
-         .style('left', '25%');
+         .style("position", "fixed")
+         .style('left', '25%')
+         .style('top', '20%');
 
       // Aquí es donde se carga el archivo world.svg y se agrega al SVG
       d3.xml(require("@/assets/world.svg"))
@@ -58,6 +60,16 @@ export default {
                .on('click', this.changeColorOnClick)
                .on('mouseover', this.changeColorOnHover)
                .on('mouseout', this.restoreColorOnHover);
+
+            // Agregar zoom al mapa
+            const zoom = d3.zoom()
+               .scaleExtent([1, 8]) // Definir los límites de zoom
+               .on('zoom', this.zoomed); // Llamar a la función zoomed() cada vez que se haga zoom
+
+            svg.call(zoom); // Llamar a la función zoom en el elemento SVG
+
+            // Inicializar el estado del zoom
+            this.currentZoom = 1;
          })
          .catch(error => {
             console.error(error);
@@ -112,6 +124,23 @@ export default {
             element.classList.remove("selectedPath");
             element.style.fill = "black";
          });
+      },
+      // Función para hacer zoom
+      zoomIn() {
+         this.currentZoom = Math.min(this.currentZoom / 0.9, 1.5); // Incrementar el factor de zoom actual y asegurarse de que no exceda el límite máximo
+         d3.select('svg') // Seleccionar el elemento SVG
+            .transition() // Agregar transición animada al zoom
+            .duration(500) // Duración de la transición
+            .attr("transform", "scale(" + this.currentZoom + ")"); // Aplicar la transformación de zoom
+      },
+      // Función para hacer zoom out
+      zoomOut() {
+         this.currentZoom = Math.max(this.currentZoom * 0.9, 0.5); // Decrementar el factor de zoom actual y asegurarse de que no sea menor que el límite mínimo
+         d3.select('svg') // Seleccionar el elemento SVG
+            .transition() // Agregar una transición suave al zoom
+            .duration(500) // Duración de la transición (en milisegundos)
+            .attr("transform", "scale(" + this.currentZoom + ")"); // Aplicar la transformación de zoom
+
       }
    }
 }
