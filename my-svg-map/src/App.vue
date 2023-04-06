@@ -1,6 +1,6 @@
 <template>
-    <h1>FertImpact</h1>
-    <div>
+    <h1 class="prio">FertImpact</h1>
+    <div class="prio">
       <nav>
         <ul>
         <li><router-link to="/"> Home </router-link></li>
@@ -33,6 +33,13 @@ export default {
 </script> -->
 
 <style>
+.prio{
+   z-index: 1;
+   color: red;
+   position: relative;
+
+}
+
 /* Reset default styles */
 * {
     margin: 0;

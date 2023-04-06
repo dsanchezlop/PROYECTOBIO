@@ -4,10 +4,10 @@
    <br>
    <button class="button-container" @click="clearSelection"> Clear Selection </button>
 
-   <div>
+   <div class="prio">
       <div style="display:flex; text-align: center; align-items: center;">
          <h2>Hovered Country:</h2>
-         <h3 style="color: black" id="hover-value2">Move your mouse</h3>
+         <h3 style="color: red" id="hover-value2">Move your mouse</h3>
       </div>
       <h2>Selected Countries:</h2>
       <div style="display:inline">
@@ -34,7 +34,7 @@ export default {
    data() {
       return {
          selectedStates: ref([]),
-         currentZoom: 1 // Definir la variable currentZoom
+         currentZoom: 1
       }
    },
    mounted() {
@@ -59,7 +59,7 @@ export default {
             paths
                .on('click', this.changeColorOnClick)
                .on('mouseover', this.changeColorOnHover)
-               .on('mouseout', this.restoreColorOnHover);
+               .on('mouseout', this.restoreColorOnHover)               ;
 
             // Agregar zoom al mapa
             const zoom = d3.zoom()
@@ -141,6 +141,11 @@ export default {
             .duration(500) // Duración de la transición (en milisegundos)
             .attr("transform", "scale(" + this.currentZoom + ")"); // Aplicar la transformación de zoom
 
+      },
+      // Función para hacer zoom con el scroll del ratón y draggear el mapa
+      zoomed(event) {
+         this.currentZoom = event.transform.k;
+         d3.select("svg").attr("transform", event.transform); // Aplicar la transformación al elemento SVG actual
       }
    }
 }
@@ -148,6 +153,17 @@ export default {
 
 
 <style scoped>
+.prio{
+   position: relative;
+   z-index: 1;
+   margin-right: auto;
+   width: fit-content;
+   height: fit-content;
+}
+
+h2, h3, h4 {
+   color: red;
+}
 .selectedPath {
    animation-name: slowchange;
    animation-duration: 1.5s;
