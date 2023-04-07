@@ -7,6 +7,7 @@ import database from "./components/Database.vue";
 import register from "./components/Register.vue";
 import profile from "./components/Profile.vue";
 import logout from "./components/Logout.vue";
+import charts from "./components/Charts.vue";
 
 
 //Routes
@@ -50,6 +51,11 @@ const _routes = [
     path:"/logout",
     name:"logout",
     component:logout
+},
+{
+    path:"/charts",
+    name:"charts",
+    component:charts
 }
 ];
 

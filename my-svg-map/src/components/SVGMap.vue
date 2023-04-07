@@ -3,6 +3,8 @@
    <button class="button-zoom" @click="zoomOut">-</button>
    <br>
    <button class="button-container" @click="clearSelection"> Clear Selection </button>
+   <br>
+   <button v-if="selectedStates.length > 1" class="button-container" @click="navigateToCharts">Go to charts</button>
 
    <div class="prio">
       <div style="display:flex; text-align: center; align-items: center;">
@@ -34,7 +36,8 @@ export default {
    data() {
       return {
          selectedStates: ref([]),
-         currentZoom: 1
+         currentZoom: 1,
+         name: "charts"
       }
    },
    mounted() {
@@ -59,7 +62,7 @@ export default {
             paths
                .on('click', this.changeColorOnClick)
                .on('mouseover', this.changeColorOnHover)
-               .on('mouseout', this.restoreColorOnHover)               ;
+               .on('mouseout', this.restoreColorOnHover);
 
             // Agregar zoom al mapa
             const zoom = d3.zoom()
@@ -74,6 +77,11 @@ export default {
          .catch(error => {
             console.error(error);
          });
+      const countries = this.$route.query.countries;
+      if (countries) {
+         const countryList = countries.split(",");
+         const selectedCountries = countryList.join(", ");
+      }
    },
    methods: {
       // Función para cambiar el color de fondo de un elemento "path" a verde al hacer clic en él
@@ -146,14 +154,19 @@ export default {
       zoomed(event) {
          this.currentZoom = event.transform.k;
          d3.select("svg").attr("transform", event.transform); // Aplicar la transformación al elemento SVG actual
+      },
+      navigateToCharts() {
+         const selectedCountries = this.selectedStates.map(state => state.title).join(",");
+         this.$router.push({ name: "charts", query: { countries: selectedCountries } });
       }
+
    }
 }
 </script>
 
 
 <style scoped>
-.prio{
+.prio {
    position: relative;
    z-index: 1;
    margin-right: auto;
@@ -161,9 +174,12 @@ export default {
    height: fit-content;
 }
 
-h2, h3, h4 {
+h2,
+h3,
+h4 {
    color: red;
 }
+
 .selectedPath {
    animation-name: slowchange;
    animation-duration: 1.5s;
