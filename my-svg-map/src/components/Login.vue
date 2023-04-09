@@ -1,29 +1,48 @@
 <template>
-    <div class="container">
-        <h1>Login Page</h1>
-        <form action="{{url_for('login')}}" method="POST">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login">
-            </div>
-        </form>
+    <div>
+      <h1>Login</h1>
+      <form @submit.prevent="login">
+        <div>
+          <label>Username</label>
+          <input type="text" v-model="username" required>
+        </div>
+        <div>
+          <label>Password</label>
+          <input type="password" v-model="password" required>
+        </div>
+        <div>
+          <button type="submit">Login</button>
+        </div>
+      </form>
     </div>
   </template>
-  
+
   <script>
+  import axios from 'axios';
+
   export default {
-    name: 'Login',
+    data() {
+      return {
+        username: '',
+        password: ''
+      }
+    },
+    methods: {
+      login() {
+        console.log("Making login request to /api/login endpoint...");
+        axios.post('/login', {
+          username: this.username,
+          password: this.password
+        })
+        .then(response => {
+          // Handle successful login here
+          console.log(response.data.message);
+        })
+        .catch(error => {
+          // Handle failed login here
+          console.log(error.response.data.error);
+        });
+      }
+    }
   }
   </script>
-  
-  <style>
-
-  </style>
-  

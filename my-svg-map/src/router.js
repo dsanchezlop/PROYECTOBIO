@@ -8,6 +8,7 @@ import register from "./components/Register.vue";
 import profile from "./components/Profile.vue";
 import logout from "./components/Logout.vue";
 import charts from "./components/Charts.vue";
+import contact from "./components/Contact.vue";
 
 
 //Routes
@@ -56,6 +57,11 @@ const _routes = [
     path:"/charts",
     name:"charts",
     component:charts
+},
+{
+    path:"/contact",
+    name:"contact",
+    component:contact
 }
 ];
 

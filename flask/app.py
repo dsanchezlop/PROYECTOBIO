@@ -1,91 +1,110 @@
-import jwt
+# Imports
+from flask import Flask, request, jsonify
+from flask_mysqldb import MySQL
+from config import config
 import hashlib
-from flask import Flask, request, jsonify, session
-from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://<username>:<password>@<host>/<database>'
-db = SQLAlchemy(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+conexion = MySQL(app)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    name = db.Column(db.String(50), nullable=False)
-    surname = db.Column(db.String(50),  nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    role = db.Column(db.Integer, nullable=False)
+@app.after_request
+def add_header(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
-    def __init__(self, username, password, name, surname, email, role):
-        self.username = username
-        self.password = hashlib.sha256(password.encode('utf-8')).hexdigest()
-        self.name = name
-        self.surname = surname
-        self.email = email
-        self.role = role
 
-    def __repr__(self):
-        return f'<User {self.username}>'
+@app.route('/users')
+def users():
+    try:
+        cursor = conexion.connection.cursor()
+        sql = 'SELECT * FROM users WHERE role = 2'
+        cursor.execute(sql)
+        datos = cursor.fetchall()
+        users = []
+        for fila in datos:
+            user ={'user_id':fila[0] ,'username': fila[1], 'passw': fila[2]}
+            users.append(user)
+        return jsonify({'users':users, 'msg': 'Showing all users'})
+    except Exception as ex:
+        return jsonify({'error':'error'})
+
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
+    print("Received login request...")
 
-    user = User.query.filter_by(username=username).first()
+    # Get user data from request
+    username = request.json['username']
+    password = request.json['password']
+    password = hashlib.sha256(password.encode()).hexdigest()
 
-    if user and user.password == hashlib.sha256(password.encode('utf-8')).hexdigest():
-        return jsonify({'success': True}), 200
+    # Check if user exists in database
+    cursor = conexion.connection.cursor()
+    query = "SELECT * FROM users WHERE username = %s AND passw = %s"
+    values = (username, password)
+    cursor.execute(query, values)
+    user = cursor.fetchone()
+    cursor.close()
+
+    if user:
+        return jsonify({'message': 'User logged in successfully.'})
     else:
-        return jsonify({'success': False}), 401
-
-
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    return jsonify({'message': 'Logout successful'})
+        return jsonify({'error': 'Invalid username or password.'}), 401
 
 
 @app.route('/register', methods=['POST'])
 def register():
+    # Get user data from request
     username = request.json['username']
     password = request.json['password']
     name = request.json['name']
     surname = request.json['surname']
     email = request.json['email']
-    role = 'registered'
+    password = hashlib.sha256(password.encode()).hexdigest()
 
-    if not username or not email or not password or not name or not surname or not email:
-        return jsonify({'message': 'Missing parameters'}), 400
-    if User.query.filter_by(username=username).first() is not None:
-        return jsonify({'message': 'Username already taken'}), 409
-    if User.query.filter_by(email=email).first() is not None:
-        return jsonify({'message': 'Email already registered'}), 409
-    user = User(username, password, name, surname, email, password, role)
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({'message': 'Registration successful'}), 201
+    cursor = conexion.connection.cursor()
+    query = "SELECT * FROM users WHERE username = %s"
+    values = (username,)
+    cursor.execute(query, values)
+    user = cursor.fetchone()
+    cursor.close()
 
-@app.route('/users/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'message': 'User not found'}), 404
-    data = request.get_json()
-    username = data.get('username')
+    if user:
+        return jsonify({'error': 'User not available'}), 401
+    else:
+        cursor = conexion.connection.cursor()
+        query = "SELECT * FROM users WHERE email = %s"
+        values = (email,)
+        cursor.execute(query, values)
+        emailCheck = cursor.fetchone()
+        cursor.close()
 
-    email = data.get('email')
-    password = data.get('password')
-    if username:
-        user.username = username
-    if email:
-        user.email = email
-    if password:
-        user.set_password(password)
-    db.session.commit()
-    return jsonify({'message': 'User updated successfully'}), 200
+        if emailCheck:
+            return jsonify({'error': 'Email not available'}), 401
+        else:
+            try:
+                cursor = conexion.connection.cursor()
+                query = "INSERT INTO users (username, passw, name, surname, email, role) VALUES (%s, %s, %s, %s, %s, 2)"
+                values = (username, password, name, surname, email)
+                print('Inserting values:', values)
+                result = cursor.execute(query, values)
+                print('Rows affected:', cursor.rowcount)
+                cursor.close()
+                return jsonify({'message': 'User registered successfully'})
+            except Exception as e:
+                print(e)
+                return jsonify({'error': 'Error registering user'}), 500
+
+
+
+def not_found(error):
+    return '<h1>Página no encontrada</h1>', 404
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.config.from_object(config['development'])
+    app.register_error_handler(404, not_found)
+    app.run()
