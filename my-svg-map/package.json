@@ -12,6 +12,7 @@
     "bootstrap": "^5.2.3",
     "core-js": "^3.8.3",
     "d3": "^7.8.4",
+    "js-cookie": "^3.0.1",
     "svg-country-flags": "^1.2.10",
     "svg.js": "^2.7.1",
     "vue": "^3.2.13",

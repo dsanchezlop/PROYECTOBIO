@@ -19,6 +19,7 @@
 
   <script>
   import axios from 'axios';
+  import Cookies from 'js-cookie';
 
   export default {
     data() {
@@ -37,6 +38,11 @@
         .then(response => {
           // Handle successful login here
           console.log(response.data.message);
+          // Set the username cookie
+          Cookies.set('username', response.data.username);
+          Cookies.set('role', response.data.role);
+          // Navigate to the home page
+          this.$router.push('/');
         })
         .catch(error => {
           // Handle failed login here

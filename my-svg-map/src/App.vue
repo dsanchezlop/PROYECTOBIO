@@ -30,7 +30,7 @@
             <router-link class="nav-link" to="/profile">Profile</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/logout">Logout</router-link>
+            <router-link class="nav-link" to="/logout" @click="logout">Logout</router-link>
           </li>
         </ul>
       </div>
@@ -38,6 +38,29 @@
     <router-view />
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    isLoggedIn() {
+      return document.cookie.includes('isLoggedIn=true');
+    },
+    logout() {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
+    window.location.href = '/';
+  }
+  }
+}
+
+
+
+</script>
 
 <style>
   .navbar-brand {

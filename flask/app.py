@@ -50,7 +50,8 @@ def login():
     cursor.close()
 
     if user:
-        return jsonify({'message': 'User logged in successfully.'})
+        response = jsonify({'username': user[1], 'role': user[6]})
+        return response
     else:
         return jsonify({'error': 'Invalid username or password.'}), 401
 
@@ -98,7 +99,16 @@ def register():
                 print(e)
                 return jsonify({'error': 'Error registering user'}), 500
 
-
+# def getRole(username):
+#     try:
+#         cursor = conexion.connection.cursor()
+#         sql = 'SELECT role FROM `users` WHERE username = %s';
+#         values =(username,)
+#         cursor.execute(sql, values)
+#         datos = cursor.fetchone()
+#         return datos
+#     except Exception as e:
+#         return
 
 def not_found(error):
     return '<h1>Página no encontrada</h1>', 404
