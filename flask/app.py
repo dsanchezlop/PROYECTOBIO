@@ -4,6 +4,9 @@ from flask_mysqldb import MySQL
 from config import config
 import hashlib
 from flask_cors import CORS
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -109,6 +112,38 @@ def register():
 #         return datos
 #     except Exception as e:
 #         return
+
+@app.route('/send-email', methods=['POST'])
+def send_email():
+    data = request.get_json()
+    sender_email = "fertimpact@gmail.com"
+    sender_password = "elbichosu"
+    recipient_email = "fertimpact@gmail.com"
+    subject = data['subject']
+    body = data['message']
+
+    try:
+        
+        # Set up SMTP connection
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login(sender_email, sender_password)
+
+        # Create email message
+        message = MIMEMultipart()
+        message['From'] = sender_email
+        message['To'] = recipient_email
+        message['Subject'] = subject
+        message.attach(MIMEText(body, 'plain'))
+
+        # Send email
+        server.sendmail(sender_email, recipient_email, message.as_string())
+
+        # Close SMTP connection
+        server.quit()
+        print('HOLAS')
+        return jsonify({'Message':'SU'})
+    except Exception as e:
+        return jsonify({'Error':'NO'})
 
 def not_found(error):
     return '<h1>Página no encontrada</h1>', 404

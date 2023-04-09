@@ -21,6 +21,9 @@
             <router-link class="nav-link" to="/database">Database</router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" to="/contact">Contact</router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" to="/login">Login</router-link>
           </li>
           <li class="nav-item">
@@ -46,6 +49,7 @@ export default {
       return document.cookie.includes('isLoggedIn=true');
     },
     logout() {
+      //Gets all the cookies
     const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i];

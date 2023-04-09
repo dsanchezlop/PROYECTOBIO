@@ -63,6 +63,7 @@ const _routes = [
     name:"contact",
     component:contact
 }
+
 ];
 
 //Create router
@@ -70,6 +71,25 @@ const router = createRouter({
     history:createWebHistory(),
     routes: _routes,
 });
+
+// authentication check
+router.beforeEach((to, from, next) => {
+    const loggedIn = document.cookie.includes('isLoggedIn=true');
+  
+    // redirect to login page if user is not logged in and trying to access a protected page
+    if (to.matched.some(record => record.meta.requiresAuth) && !loggedIn) {
+      next('/login');
+      return;
+    }
+  
+    // redirect to home page if user is logged in and trying to access login/register page
+    if (to.matched.some(record => record.meta.requiresGuest) && loggedIn) {
+      next('/');
+      return;
+    }
+  
+    next();
+  });
 
 //Export router
 export default router;
