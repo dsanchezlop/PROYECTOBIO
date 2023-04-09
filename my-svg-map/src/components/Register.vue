@@ -53,7 +53,7 @@
           return;
         }
 
-        axios.post('/register', {
+        axios.post('http://127.0.0.1:5000/register', {
           username: this.username,
           password: this.password,
           name: this.name,

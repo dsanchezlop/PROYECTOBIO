@@ -30,10 +30,10 @@
     methods: {
       login() {
         console.log("Making login request to /api/login endpoint...");
-        axios.post('/login', {
-          username: this.username,
-          password: this.password
-        })
+        axios.post('http://127.0.0.1:5000/login', {
+        username: this.username,
+        password: this.password
+      })
         .then(response => {
           // Handle successful login here
           console.log(response.data.message);

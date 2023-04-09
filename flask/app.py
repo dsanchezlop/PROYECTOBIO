@@ -5,16 +5,16 @@ from config import config
 import hashlib
 from flask_cors import CORS
 
-
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+app.config['CORS_HEADERS'] = 'Content-Type'
 conexion = MySQL(app)
-
 @app.after_request
-def add_header(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
-
 
 @app.route('/users')
 def users():
