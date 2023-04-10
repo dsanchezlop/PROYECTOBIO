@@ -94,24 +94,25 @@ def register():
     if user:
         return jsonify({'error': 'User not available'}), 401
     else:
-        cursor = conexion.connection.cursor()
+        cursor2 = conexion.connection.cursor()
         query = "SELECT * FROM users WHERE email = %s"
         values = (email,)
-        cursor.execute(query, values)
-        emailCheck = cursor.fetchone()
-        cursor.close()
+        cursor2.execute(query, values)
+        emailCheck = cursor2.fetchone()
+        cursor2.close()
 
         if emailCheck:
             return jsonify({'error': 'Email not available'}), 401
         else:
-            try:
-                cursor = conexion.connection.cursor()
-                query = "INSERT INTO users (username, passw, name, surname, email, role) VALUES (%s, %s, %s, %s, %s, 2)"
+            try:    
+                cursor3 = conexion.connection.cursor()
+                query = 'INSERT INTO users (username, passw, name, surname, email, role) VALUES (%s, %s, %s, %s, %s, 2)'
                 values = (username, password, name, surname, email)
                 print('Inserting values:', values)
-                result = cursor.execute(query, values)
-                print('Rows affected:', cursor.rowcount)
-                cursor.close()
+                cursor3.execute(query, values)
+                print('Rows affected:', cursor3.rowcount)
+                conexion.connection.commit()
+                cursor3.close()
                 return jsonify({'message': 'User registered successfully'})
             except Exception as e:
                 print(e)
@@ -155,10 +156,9 @@ def send_email():
 
         # Close SMTP connection
         server.quit()
-        print('HOLAS')
-        return jsonify({'Message':'SU'})
+        return jsonify({'Message':'Email sent'})
     except Exception as e:
-        return jsonify({'Error':'NO'})
+        return jsonify({'Error':'Error, email not sent'})
 
 def not_found(error):
     return '<h1>Página no encontrada</h1>', 404
