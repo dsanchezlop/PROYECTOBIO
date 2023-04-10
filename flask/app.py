@@ -23,6 +23,8 @@ def after_request(response):
     return response
 
 # API USERS DANI
+
+#User fetching
 @app.route('/users')
 def users():
     try:
@@ -37,7 +39,7 @@ def users():
         return jsonify({'users':users})
     except Exception as ex:
         return jsonify({'error':'error'})
-
+#User deletion code
 @app.route('/delete-user/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
     try:
@@ -49,7 +51,7 @@ def delete_user(user_id):
     except Exception as ex:
         return jsonify({'error': 'Error deleting user'})
 
-
+#User login code
 @app.route('/login', methods=['POST'])
 def login():
     print("Received login request...")
@@ -73,7 +75,7 @@ def login():
     else:
         return jsonify({'error': 'Invalid username or password.'}), 401
 
-
+#User registration code
 @app.route('/register', methods=['POST'])
 def register():
     # Get user data from request
@@ -118,17 +120,7 @@ def register():
                 print(e)
                 return jsonify({'error': 'Error registering user'}), 500
 
-# def getRole(username):
-#     try:
-#         cursor = conexion.connection.cursor()
-#         sql = 'SELECT role FROM `users` WHERE username = %s';
-#         values =(username,)
-#         cursor.execute(sql, values)
-#         datos = cursor.fetchone()
-#         return datos
-#     except Exception as e:
-#         return
-
+#Code to send contact email
 @app.route('/send-email', methods=['POST'])
 def send_email():
     data = request.get_json()

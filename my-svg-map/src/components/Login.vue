@@ -38,9 +38,11 @@
         .then(response => {
           // Handle successful login here
           console.log(response.data.message);
-          // Set the username cookie
-          Cookies.set('username', response.data.username);
-          Cookies.set('role', response.data.role);
+          // Set the cookies
+          const twoHoursFromNow = new Date(Date.now() + 2 * 60 * 60 * 1000);
+          Cookies.set('username', response.data.username, { expires: twoHoursFromNow });
+          Cookies.set('role', response.data.role, { expires: twoHoursFromNow });
+          Cookies.set('isLoggedIn', 'true', { expires: twoHoursFromNow })
           // Navigate to the home page
           this.$router.push('/');
         })

@@ -26,7 +26,10 @@ const _routes = [
 {
     path:"/login",
     name:"login",
-    component:login
+    component:login,
+    meta: {
+        requiresGuest: true // add this meta property to mark this route as requiring a guest user
+      }
 },
 {
     path:"/map_flora",
@@ -34,19 +37,39 @@ const _routes = [
     component:map_flora
 },
 {
-    path:"/database",
-    name:"database",
-    component:database
-},
+    path: '/database',
+    name: 'database',
+    component: database,
+    beforeEnter: (to, from, next) => {
+        const isLoggedIn = document.cookie.includes('isLoggedIn=true');
+        const userRoleCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('role='));
+        
+        if (isLoggedIn && userRoleCookie) {
+          const userRole = parseInt(userRoleCookie.split('=')[1].trim());
+          if (userRole === 1) {
+            next();
+            return;
+          }
+        }
+      
+        next('/login');
+      },
+  },
 {
     path:"/register",
     name:"register",
-    component:register
+    component:register,
+    meta: {
+        requiresGuest: true // add this meta property to mark this route as requiring a guest user
+      }
 },
 {
     path:"/profile",
     name:"profile",
-    component:profile
+    component:profile,
+    meta: {
+        requiresAuth: true // add this meta property to mark this route as requiring an authenticated user
+      }
 },
 {
     path:"/logout",
