@@ -43,6 +43,7 @@
       };
     },
     methods: {
+      // Name checks
       registerUser() {
         if (!/^[a-zA-Z\s]+$/.test(this.name)) {
         this.error = 'Name must not contain numbers';
@@ -53,7 +54,7 @@
         this.error = 'Surname must not contain numbers';
         return;
       }
-
+        // API POST Calling
         axios.post('http://127.0.0.1:5000/register', {
           username: this.username,
           password: this.password,

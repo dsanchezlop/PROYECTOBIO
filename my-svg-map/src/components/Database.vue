@@ -34,6 +34,7 @@ export default {
     this.fetchData();
   },
   methods: {
+    //Gets user data
     fetchData() {
       fetch("http://localhost:5000/users")
         .then((response) => response.json())
@@ -41,6 +42,7 @@ export default {
           this.users = data.users;
         });
     },
+    //Deletes user with DELETE
     deleteUser(userId) {
       fetch(`http://localhost:5000/delete-user/${userId}`, {
         method: 'DELETE'

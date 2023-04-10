@@ -36,6 +36,7 @@ export default {
     }
   },
   methods: {
+    //API POST to send email with payload
     submitForm() {
       const payload = {
         name: this.name,

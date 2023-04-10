@@ -31,6 +31,7 @@ export default {
     }
   },
   methods: {
+    // API POST Login
     login() {
       console.log("Making login request to /api/login endpoint...");
       axios.post('http://127.0.0.1:5000/login', {

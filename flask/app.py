@@ -39,6 +39,7 @@ def users():
         return jsonify({'users':users})
     except Exception as ex:
         return jsonify({'error':'error'})
+    
 #User deletion code
 @app.route('/delete-user/<user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -70,6 +71,7 @@ def login():
     cursor.close()
 
     if user:
+
         response = jsonify({'user_id':user[0],'username': user[1], 'role': user[6]})
         return response
     else:
