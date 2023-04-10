@@ -1,0 +1,8 @@
+mysql-connector-python
+requests
+Flask
+Flask-Cors
+Flask-Limiter
+Flask-Jsonpify
+flask-requests
+psutil
