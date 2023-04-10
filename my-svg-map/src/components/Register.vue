@@ -24,6 +24,7 @@
         </div>
         <button type="submit">Register</button>
       </form>
+      <p v-if="error" class="error">{{ error }}</p>
     </div>
   </template>
 
@@ -43,15 +44,15 @@
     },
     methods: {
       registerUser() {
-        if (!/^[a-zA-Z]+$/.test(this.name)) {
-          this.error = 'Name must not contain numbers';
-          return;
-        }
+        if (!/^[a-zA-Z\s]+$/.test(this.name)) {
+        this.error = 'Name must not contain numbers';
+        return;
+      }
 
-        if (!/^[a-zA-Z]+$/.test(this.surname)) {
-          this.error = 'Surname must not contain numbers';
-          return;
-        }
+      if (!/^[a-zA-Z\s]+$/.test(this.surname)) {
+        this.error = 'Surname must not contain numbers';
+        return;
+      }
 
         axios.post('http://127.0.0.1:5000/register', {
           username: this.username,

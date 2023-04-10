@@ -70,7 +70,7 @@ def login():
     cursor.close()
 
     if user:
-        response = jsonify({'username': user[1], 'role': user[6]})
+        response = jsonify({'user_id':user[0],'username': user[1], 'role': user[6]})
         return response
     else:
         return jsonify({'error': 'Invalid username or password.'}), 401
@@ -120,6 +120,8 @@ def register():
                 print(e)
                 return jsonify({'error': 'Error registering user'}), 500
 
+
+
 #Code to send contact email
 @app.route('/send-email', methods=['POST'])
 def send_email():
@@ -153,7 +155,7 @@ def send_email():
         return jsonify({'Error':'Error, email not sent'})
 
 def not_found(error):
-    return '<h1>Página no encontrada</h1>', 404
+    return '<h1>Page found</h1>', 404
 
 
 # API FERTILIZERS ALBERT

@@ -3,23 +3,21 @@
     <main>
       <section id="about">
         <h2>About Us</h2>
-        <p>Insert information about your research group and its mission here.</p>
+        <p>We are a group of students from Catalonia that wanted to present information about how the fertilizers are affecting our ecosystem.</p>
       </section>
       <section id="research">
         <h2>Research</h2>
-        <p>Insert information about your research projects and interests here.</p>
+        <p>We grouped the data from several sources to present it in a comfortable and easy-to-read way</p>
       </section>
       <section id="publications">
         <h2>Publications</h2>
-        <p>Insert a list of your publications here, with links to full text if available.</p>
-      </section>
-      <section id="people">
-        <h2>People</h2>
-        <p>Insert a list of your research group members here, with links to their individual pages if available.</p>
+        <p>We acquired the data for this project from these sources:</p>
+        <a href="https://www.nature.com/articles/s41597-022-01395-2">Nature: A global dataset to parametrize critical nitrogen dilution curves for major crop species</a>
+        <a href="https://ourworldindata.org/fertilizers#explore-data-on-fertilizers">Our world in data: A global dataset of fertilizer data</a>
       </section>
       <section id="contact">
         <h2>Contact</h2>
-        <p>Insert contact information for your research group here, including email addresses and phone numbers.</p>
+        <p>We have a contact form where you can message us about any questions you may have</p>
       </section>
     </main>
 
@@ -35,22 +33,4 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}</style>
+<style></style>

@@ -1,9 +1,6 @@
 <template>
-    <div class="hello">
-      <br>
-      <!-- <h1>Logout</h1> -->
-    </div>
-  </template>
+
+</template>
   
   <script>
   export default {
