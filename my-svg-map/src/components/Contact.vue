@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style>
-.contact-form {
+form {
   display: flex;
   flex-direction: column;
   max-width: 600px;
@@ -72,14 +72,14 @@ export default {
   border-radius: 5px;
 }
 
-.contact-form label {
+form label {
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.contact-form input[type="text"],
-.contact-form input[type="email"],
-.contact-form textarea {
+form input[type="text"],
+form input[type="email"],
+form textarea {
   padding: 10px;
   margin-bottom: 20px;
   border: none;
@@ -89,11 +89,11 @@ export default {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.contact-form textarea {
+form textarea {
   height: 150px;
 }
 
-.contact-form button[type="submit"] {
+form button[type="submit"] {
   background-color: #4CAF50;
   color: #fff;
   border: none;
@@ -103,7 +103,7 @@ export default {
   cursor: pointer;
 }
 
-.contact-form button[type="submit"]:hover {
+form button[type="submit"]:hover {
   background-color: #3e8e41;
 }
 </style>

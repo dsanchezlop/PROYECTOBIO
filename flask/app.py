@@ -32,11 +32,22 @@ def users():
         datos = cursor.fetchall()
         users = []
         for fila in datos:
-            user ={'user_id':fila[0] ,'username': fila[1], 'passw': fila[2]}
+            user ={'user_id':fila[0] ,'username': fila[1], 'email': fila[5]}
             users.append(user)
-        return jsonify({'users':users, 'msg': 'Showing all users'})
+        return jsonify({'users':users})
     except Exception as ex:
         return jsonify({'error':'error'})
+
+@app.route('/delete-user/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        cursor = conexion.connection.cursor()
+        sql = 'DELETE FROM users WHERE id = %s'
+        cursor.execute(sql, (user_id,))
+        conexion.connection.commit()
+        return jsonify({'message': 'User deleted successfully'})
+    except Exception as ex:
+        return jsonify({'error': 'Error deleting user'})
 
 
 @app.route('/login', methods=['POST'])
