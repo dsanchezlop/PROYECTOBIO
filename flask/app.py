@@ -22,7 +22,7 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
     return response
 
-# API USERS DANI
+# API USERS
 
 #User fetching
 @app.route('/users')
@@ -160,7 +160,7 @@ def not_found(error):
     return '<h1>Page found</h1>', 404
 
 
-# API FERTILIZERS ALBERT
+# API FERTILIZERS
 
 @app.route("/")
 def homepage():
