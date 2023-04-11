@@ -25,7 +25,7 @@
             <router-link class="nav-link" to="/map_flora" onclick="location.href=this.href; location.reload(true); return false;">Flora maps</router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="showDatabaseOption" class="nav-link" to="/database" onclick="location.href=this.href; location.reload(true); return false;">Database</router-link>
+            <router-link v-if="showDatabaseOption" class="nav-link" to="/database" onclick="location.href=this.href; location.reload(true); return false;">User database</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/contact" onclick="location.href=this.href; location.reload(true); return false;">Contact</router-link>
@@ -169,4 +169,7 @@ section a:hover {
   text-decoration: underline;
 }
 
+h1{
+  text-align: center;
+}
 </style>

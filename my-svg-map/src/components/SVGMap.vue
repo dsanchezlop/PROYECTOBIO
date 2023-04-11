@@ -6,12 +6,14 @@
     <h3>Select year</h3>
     <input
       type="range"
-      id="year-slider"
       min="1961"
       max="2019"
       step="1"
-      value="1961"
+      id="year-slider"
+      v-model="selectedYear"
+      @change="updateMap"
     />
+    <span>{{ selectedYear }}</span>
     <button id="play-button">Play</button>
   </div>
   <h3>Select fertilizer</h3>
@@ -80,7 +82,8 @@ export default {
     return {
       selectedStates: ref([]),
       currentZoom: 1,
-      // name: "charts"
+      name: "charts",
+      selectedYear: 1961,
     };
   },
   mounted() {
@@ -230,7 +233,7 @@ export default {
       });
     },
     getDataFromAPI() {
-      const apiUrl = `http://49.12.36.190/api/fertilizers-${selectedFertilizer.value}`;
+      const apiUrl = `http://49.12.36.190/api/fertilizers-${selectedFertilizer.value}-year?year=${this.selectedYear}`;
 
       axios
         .get(apiUrl)
@@ -422,6 +425,9 @@ export default {
           clearInterval(interval);
         }
       }, 1000); // Change every 1000 milliseconds (1 second)
+    },
+    updateMap() {
+      this.getDataFromAPI();
     },
   },
 };
