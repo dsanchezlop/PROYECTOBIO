@@ -14,7 +14,6 @@
       @change="updateMap"
     />
     <span>{{ selectedYear }}</span>
-    <button id="play-button">Play</button>
   </div>
   <h3>Select fertilizer</h3>
   <select class="prio" @change="updateFertilizerType">
