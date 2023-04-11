@@ -22,9 +22,6 @@
             <router-link class="nav-link" to="/map">Maps</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/map_flora" onclick="location.href=this.href; location.reload(true); return false;">Flora maps</router-link>
-          </li>
-          <li class="nav-item">
             <router-link v-if="showDatabaseOption" class="nav-link" to="/database" onclick="location.href=this.href; location.reload(true); return false;">User database</router-link>
           </li>
           <li class="nav-item">
@@ -35,9 +32,6 @@
           </li>
           <li v-if="!loggedIn" class="nav-item">
             <router-link class="nav-link" to="/register" onclick="location.href=this.href; location.reload(true); return false;">Register</router-link>
-          </li>
-          <li v-if="loggedIn" class="nav-item">
-            <router-link class="nav-link" to="/profile" onclick="location.href=this.href; location.reload(true); return false;">Profile</router-link>
           </li>
           <li v-if="loggedIn" class="nav-item">
             <router-link class="nav-link" to="/logout" @click="logout"

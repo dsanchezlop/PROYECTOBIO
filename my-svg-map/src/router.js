@@ -2,10 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import hello from "./components/HelloWorld.vue";
 import map from "./components/SVGMap.vue";
 import login from "./components/Login.vue";
-import map_flora from "./components/FloraMaps.vue";
 import database from "./components/Database.vue";
 import register from "./components/Register.vue";
-import profile from "./components/Profile.vue";
 import logout from "./components/Logout.vue";
 import charts from "./components/Charts.vue";
 import contact from "./components/Contact.vue";
@@ -32,11 +30,6 @@ const _routes = [
       }
 },
 {
-    path:"/map_flora",
-    name:"map_flora",
-    component:map_flora
-},
-{
     path: '/database',
     name: 'database',
     component: database,
@@ -61,14 +54,6 @@ const _routes = [
     component:register,
     meta: {
         requiresGuest: true // add this meta property to mark this route as requiring a guest user
-      }
-},
-{
-    path:"/profile",
-    name:"profile",
-    component:profile,
-    meta: {
-        requiresAuth: true // add this meta property to mark this route as requiring an authenticated user
       }
 },
 {

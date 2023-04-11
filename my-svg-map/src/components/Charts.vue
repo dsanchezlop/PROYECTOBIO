@@ -3,70 +3,74 @@
 </template>
 
 <script>
-import * as d3 from "d3";
-
 export default {
+  name: "Charts",
   data() {
     return {
-      data: [
-        { date: "2022-01-01", value: 100 },
-        { date: "2022-02-01", value: 150 },
-        { date: "2022-03-01", value: 200 },
-        { date: "2022-04-01", value: 250 },
-        { date: "2022-05-01", value: 300 },
-        { date: "2022-06-01", value: 350 },
-      ],
-      lines: [],
+      countries: [],
     };
   },
-
-  mounted() {
-    this.createChart();
+  created() {
+    // Get the countries from the url
+    this.countries = this.$route.query.countries.split(",");
+    // console.log(this.countries);
   },
+  getDataFromAPI() {
+      const apiUrl = `http://49.12.36.190/api/fertilizers-${selectedFertilizer.value}-year?year=${this.selectedYear}`;
 
-  methods: {
-    createChart() {
-      const svg = d3
-        .select("#chart")
-        .append("svg")
-        .attr("width", 600)
-        .attr("height", 400);
-
-      const margin = { top: 20, right: 20, bottom: 30, left: 50 };
-      const width = +svg.attr("width") - margin.left - margin.right;
-      const height = +svg.attr("height") - margin.top - margin.bottom;
-      const g = svg
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
-
-      const xScale = d3
-        .scaleTime()
-        .domain(d3.extent(this.data, (d) => new Date(d.date)))
-        .range([0, width]);
-
-      const yScale = d3
-        .scaleLinear()
-        .domain([0, d3.max(this.data, (d) => d.value)])
-        .range([height, 0]);
-
-      const line = d3
-        .line()
-        .x((d) => xScale(new Date(d.date)))
-        .y((d) => yScale(d.value));
-
-      g.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y-%m-%d")));
-
-      g.append("g").call(d3.axisLeft(yScale));
-
-      g.append("path")
-        .datum(this.data)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 2)
-        .attr("d", line);
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          const data = response.data;
+          this.updateMapValues(data);
+          
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
-  },
+    updateMapValues(data) {
+      const paths = document.querySelectorAll("path");
+      const tooltip = document.createElement("div"); // Creates the div element for the tooltip
+      tooltip.style.position = "absolute";
+      tooltip.style.backgroundColor = "white";
+      tooltip.style.border = "1px solid gray";
+      tooltip.style.padding = "5px";
+      tooltip.style.pointerEvents = "none";
+      tooltip.style.display = "none"; // Hides the tooltip by default
+      document.body.appendChild(tooltip); // Adds the tooltip to the body
+
+      paths.forEach((path) => {
+        const code = path.getAttribute("id");
+        const value = data.find((item) => item.code === code)?.amount ?? 0;
+        path.setAttribute("amount", value);
+
+        path.addEventListener("mouseover", () => {
+          // Gets the mouse position and updates the tooltip
+          const x = event.clientX;
+          const y = event.clientY;
+          tooltip.style.top = `${y}px`;
+          tooltip.style.left = `${x}px`;
+          tooltip.style.display = "block"; // Shows the tooltip
+          tooltip.textContent = `${path.getAttribute("title")}: ${value}`;
+        });
+
+        path.addEventListener("mousemove", () => {
+          // Updates the tooltip while the mouse moves inside the "path"
+          const x = event.clientX;
+          const y = event.clientY;
+          tooltip.style.top = `${y}px`;
+          tooltip.style.left = `${x}px`;
+        });
+
+        path.addEventListener("mouseout", () => {
+          // Hide the tooltip when the mouse leaves the "path" element
+          tooltip.style.display = "none";
+        });
+      console.log(data);
+
+      });
+    }
 };
+
 </script>

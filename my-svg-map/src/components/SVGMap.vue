@@ -163,7 +163,7 @@ export default {
           id: path.id,
           title: path.getAttribute("title"),
         });
-        console.log(this.selectedStates);
+      //   console.log(this.selectedStates);
       }
     },
 
