@@ -1,7 +1,7 @@
 
 Per fer funcionar la aplicació podeu activar l'entorn utilitzant el script 'env\Scripts\activate' un cd a la carpeta de Flask, i després utilitzant la comanda python app.py
 
-Després heu de fer un cd a la carpete de my-sv-map, utilitzar la comanda 'npm install' i a continuació, utilitzar la comanda 'npm run serve'. Només cal donar clic al link i veure l'aplicació en funcionament.
+Després heu de fer un cd a la carpeta de my-sv-map, utilitzar la comanda 'npm install' i a continuació, utilitzar la comanda 'npm run serve'. Només cal donar clic al link i veure l'aplicació en funcionament.
 
 Dintre del Flask estan els requeriments que es necessiten per poder fer-ho funcionar i dos arxius importants:
     -app.py que és l'aplicació principal que mostra les APIs.
