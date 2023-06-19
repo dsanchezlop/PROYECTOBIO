@@ -11,7 +11,7 @@ Inside my-svg-map we have:
     -router.js which manages the frontend routes
     -App.vue which is the main Vue application
     -The components, which are each of the views that can be accessed from Vue.
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 ESPAÑOL:
 Para hacer funcionar la aplicación puede activar el entorno utilizando el script 'env\Scripts\activate' un cd en la carpeta de Flask, y después utilizando el comando python app.py
 
@@ -25,7 +25,7 @@ Dentro del my-svg-map tenemos:
     -router.js que administra las rutas del frontend
     -App.vue que es la aplicación principal del Vue
     -Los componentes, los cuales son cada una de las vistas que se pueden acceder del Vue.
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 CATALÀ:
 Per fer funcionar la aplicació podeu activar l'entorn utilitzant el script 'env\Scripts\activate' un cd a la carpeta de Flask, i després utilitzant la comanda python app.py
 
